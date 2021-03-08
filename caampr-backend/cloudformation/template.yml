@@ -8,6 +8,8 @@ Parameters:
     Default: ''
 
 Resources:
+
+# Lambdas
   GetGearListHandler:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -18,11 +20,14 @@ Resources:
             - !Ref DevSuffix
       Handler: com.jelistan.caampr.lambda.dagger.InvocationHandlers::handleGetGearListRequest
       Runtime: java8
-      Description: Java Lambda Function
+      Description: Fetches the gear list for a provided profile
       MemorySize: 512
-      Timeout: 300
+      Timeout: 60
       CodeUri: ../build/distributions/caampr-backend-1.0-SNAPSHOT.zip
       Role: !GetAtt LambdaRole.Arn
+      Policies: [
+        !Join ["", ["", !Ref GearDDBAccessManagedPolicy]]
+      ]
       Environment:
         Variables:
           ROLE_NAME: !Ref LambdaRole
@@ -65,3 +70,53 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: "*"
+
+# DynamoDB Resources
+  GearTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: Gear-v1
+      BillingMode: "PAY_PER_REQUEST"
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+        - AttributeName: "profileId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+      GlobalSecondaryIndexes:
+        - IndexName: "gear-by-profile"
+          KeySchema:
+            - AttributeName: "profileId"
+              KeyType: "HASH"
+            - AttributeName: "id"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+      Tags:
+        - Key: TableName
+          Value: Gear
+        - Key: Project
+          Value: cammpr
+
+# IAM Resources
+  GearDDBAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: GearDDBAccess
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'dynamodb:UpdateItem'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:DeleteItem'
+              - 'dynamodb:GetItem'
+            Resource:
+              - !GetAtt GearTable.Arn
+              - !Join [ '/', [ !GetAtt GearTable.Arn, 'index/*' ] ]

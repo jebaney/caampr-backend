@@ -40,7 +40,8 @@ dependencies {
             'com.amazonaws:aws-lambda-java-events:3.7.0',
             'com.googlecode.json-simple:json-simple:1.1.1',
             'com.google.code.gson:gson:2.8.6',
-            'com.google.dagger:dagger:2.33'
+            'com.google.dagger:dagger:2.33',
+            'javax.annotation:javax.annotation-api:1.3.2'
     )
 
     annotationProcessor(
