@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.jelistan.caampr.lambda.model.Gear;
+import com.jelistan.caampr.lambda.model.GearListRequest;
 import com.jelistan.caampr.lambda.provider.GearProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class GetGearListHandlerTest {
@@ -37,8 +38,10 @@ public class GetGearListHandlerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
 
-        when(gearProvider.getGearList(anyString()))
+        when(gearProvider.getGearList(any(GearListRequest.class)))
                 .thenReturn(Lists.newArrayList(GearProvider.FAKE_GEAR));
+
+        when(requestEvent.getPath()).thenReturn("/users/6969/gear/");
 
         unit = new GetGearListHandler(gearProvider);
     }
