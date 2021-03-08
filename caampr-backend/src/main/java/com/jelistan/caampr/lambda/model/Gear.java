@@ -1,8 +1,10 @@
 package com.jelistan.caampr.lambda.model;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Builder;
 import lombok.Data;
 
+@DynamoDBTable(tableName = "asdf")
 @Builder
 @Data
 public class Gear {

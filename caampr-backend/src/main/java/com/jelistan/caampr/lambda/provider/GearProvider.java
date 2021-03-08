@@ -7,7 +7,7 @@ import com.jelistan.caampr.lambda.model.LinkTypes;
 
 import java.util.List;
 
-public class GearProvider {
+public interface GearProvider {
 
     public static final Gear FAKE_GEAR = Gear.builder()
             .id(1)
@@ -23,8 +23,6 @@ public class GearProvider {
             .imageUrl("https://images-na.ssl-images-amazon.com/images/I/51y-NmeXHdL._AC_SL1000_.jpg")
             .build();
 
-    public List<Gear> getGearList(final int profileId) {
-        return Lists.newArrayList(FAKE_GEAR);
-    }
+    public List<Gear> getGearList(final int profileId);
 
 }
