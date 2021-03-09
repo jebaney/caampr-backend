@@ -1,28 +1,30 @@
 package com.jelistan.caampr.lambda.provider;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import com.jelistan.caampr.lambda.model.Link;
-import com.jelistan.caampr.lambda.model.LinkTypes;
-import com.jelistan.caampr.lambda.provider.GearProvider;
-import com.google.common.collect.Lists;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.jelistan.caampr.lambda.model.Gear;
+
+import javax.inject.Inject;
 import java.util.List;
 
 public class GearListProvider implements GearProvider{
 
-    public List<Gear> getGearList(final int profileId){
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+    private final DynamoDBMapper mapper;
 
-        DynamoDBMapper mapper = new DynamoDBMapper(client);
+    @Inject
+    public GearListProvider(DynamoDBMapper mapper){
+        this.mapper = mapper;
+    }
 
+    public List<Gear> getGearList(final String profileId){
         Gear partitionKey = Gear.builder()
-                .id(profileId)
+                .profileId(profileId)
                 .build();
 
         DynamoDBQueryExpression<Gear> queryExpression = new DynamoDBQueryExpression<Gear>()
-            .withHashKeyValues(partitionKey);
+            .withHashKeyValues(partitionKey)
+            .withIndexName("gear-by-profile")
+            .withConsistentRead(false);
 
         List<Gear> itemList = mapper.query(Gear.class, queryExpression);
 

@@ -25,9 +25,6 @@ Resources:
       Timeout: 60
       CodeUri: ../build/distributions/caampr-backend-1.0-SNAPSHOT.zip
       Role: !GetAtt LambdaRole.Arn
-      Policies: [
-        !Join ["", ["", !Ref GearDDBAccessManagedPolicy]]
-      ]
       Environment:
         Variables:
           ROLE_NAME: !Ref LambdaRole
@@ -42,6 +39,8 @@ Resources:
           - ""
           - - LambdaRole
             - !Ref DevSuffix
+      ManagedPolicyArns:
+        - !Ref GearDDBAccessManagedPolicy
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:

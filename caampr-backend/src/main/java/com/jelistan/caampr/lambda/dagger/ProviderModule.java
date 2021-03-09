@@ -1,7 +1,12 @@
 package com.jelistan.caampr.lambda.dagger;
 
-import com.jelistan.caampr.lambda.provider.GearProvider;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.jelistan.caampr.lambda.provider.GearListProvider;
+import com.jelistan.caampr.lambda.provider.GearProvider;
 import dagger.Module;
 import dagger.Provides;
 
@@ -12,8 +17,26 @@ public class ProviderModule {
 
     @Provides
     @Singleton
-    GearProvider provideGearProvider() {
-        return new GearListProvider();
+    GearProvider provideGearProvider(DynamoDBMapper mapper) {
+        return new GearListProvider(mapper);
+    }
+
+    @Provides
+    @Singleton
+    AmazonDynamoDB provideAmazonDynamoDB(AWSCredentialsProvider credentialsProvider){
+        return AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider).build();
+    }
+
+    @Provides
+    @Singleton
+    DynamoDBMapper provideDynamoDBMapper(AmazonDynamoDB client){
+        return new DynamoDBMapper(client);
+    }
+
+    @Provides
+    @Singleton
+    AWSCredentialsProvider provideAWSCredentialProvider() {
+        return DefaultAWSCredentialsProviderChain.getInstance();
     }
 
 }

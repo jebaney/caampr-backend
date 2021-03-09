@@ -1,6 +1,5 @@
 package com.jelistan.caampr.lambda.provider;
 
-import com.google.common.collect.Lists;
 import com.jelistan.caampr.lambda.model.Gear;
 import com.jelistan.caampr.lambda.model.Link;
 import com.jelistan.caampr.lambda.model.LinkTypes;
@@ -10,7 +9,7 @@ import java.util.List;
 public interface GearProvider {
 
     public static final Gear FAKE_GEAR = Gear.builder()
-            .id(1)
+            .id("666")
             .name("Tent Stakes")
             .title("Gray Bunny Solid Steel Tent Stakes")
             .description(" Premium quality solid iron tent stake kit comes with a set of 12 pegs and a " +
@@ -23,6 +22,6 @@ public interface GearProvider {
             .imageUrl("https://images-na.ssl-images-amazon.com/images/I/51y-NmeXHdL._AC_SL1000_.jpg")
             .build();
 
-    public List<Gear> getGearList(final int profileId);
+    public List<Gear> getGearList(final String profileId);
 
 }
