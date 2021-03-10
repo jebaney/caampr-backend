@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class GetGearListHandlerTest {
@@ -37,7 +37,7 @@ public class GetGearListHandlerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
 
-        when(gearProvider.getGearList(anyInt()))
+        when(gearProvider.getGearList(anyString()))
                 .thenReturn(Lists.newArrayList(GearProvider.FAKE_GEAR));
 
         unit = new GetGearListHandler(gearProvider);

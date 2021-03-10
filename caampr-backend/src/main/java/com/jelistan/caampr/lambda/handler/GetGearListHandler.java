@@ -28,7 +28,7 @@ public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequest
     @Override
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent event, Context context)  {
         final Gson gson = new GsonBuilder().create();
-        final List<Gear> list = gearProvider.getGearList(1);
+        final List<Gear> list = gearProvider.getGearList("6969");
 
         return new APIGatewayProxyResponseEvent()
                 .withStatusCode(200)

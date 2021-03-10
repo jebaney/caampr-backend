@@ -1,12 +1,16 @@
 package com.jelistan.caampr.lambda.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Link {
-    private final int id;
-    private final String url;
-    private final LinkTypes type;
+    private int id;
+    private String url;
+    private LinkTypes type;
 }
