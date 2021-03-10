@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface GearProvider {
 
-    public static final Gear FAKE_GEAR = Gear.builder()
+    public static Gear FAKE_GEAR = Gear.builder()
             .id("666")
             .name("Tent Stakes")
             .title("Gray Bunny Solid Steel Tent Stakes")

@@ -26,9 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.969')
-    implementation (            
-        'com.amazonaws:aws-java-sdk-s3',
+    implementation (
         'com.amazonaws:aws-java-sdk-dynamodb',
         'com.amazonaws:aws-java-sdk-lambda')
     // Use JUnit test framework.
