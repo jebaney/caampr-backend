@@ -1,6 +1,7 @@
 package com.jelistan.caampr.lambda.provider;
 
 import com.jelistan.caampr.lambda.model.Gear;
+import com.jelistan.caampr.lambda.model.GearListRequest;
 import com.jelistan.caampr.lambda.model.Link;
 import com.jelistan.caampr.lambda.model.LinkTypes;
 
@@ -22,6 +23,6 @@ public interface GearProvider {
             .imageUrl("https://images-na.ssl-images-amazon.com/images/I/51y-NmeXHdL._AC_SL1000_.jpg")
             .build();
 
-    public List<Gear> getGearList(final String profileId);
+    public List<Gear> getGearList(final GearListRequest request);
 
 }
