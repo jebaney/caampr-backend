@@ -21,15 +21,16 @@ import java.util.List;
 public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private final GearProvider gearProvider;
+    private final GearListRequestAdaptor adaptor;
 
     @Inject
     public GetGearListHandler(final GearProvider gearProvider) {
         this.gearProvider = gearProvider;
+        this.adaptor = new GearListRequestAdaptor();
     }
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent event, Context context)  {
-        GearListRequestAdaptor adaptor = new GearListRequestAdaptor();
         final GearListRequest gearListRequest = adaptor.convert(event);
         final Gson gson = new GsonBuilder().create();
         final List<Gear> list = gearProvider.getGearList(gearListRequest);

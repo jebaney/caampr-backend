@@ -41,6 +41,8 @@ public class GetGearListHandlerTest {
         when(gearProvider.getGearList(any(GearListRequest.class)))
                 .thenReturn(Lists.newArrayList(GearProvider.FAKE_GEAR));
 
+        when(requestEvent.getPath()).thenReturn("/users/6969/gear");
+
         unit = new GetGearListHandler(gearProvider);
     }
 
