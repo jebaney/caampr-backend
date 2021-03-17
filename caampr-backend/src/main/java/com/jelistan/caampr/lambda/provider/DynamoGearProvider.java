@@ -3,6 +3,7 @@ package com.jelistan.caampr.lambda.provider;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.jelistan.caampr.lambda.model.Gear;
+import com.jelistan.caampr.lambda.model.GearListRequest;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -24,12 +25,12 @@ public class DynamoGearProvider implements GearProvider{
     /**
      * Fetches a JSON list of gear objects from the Dynamo server based on the gears' associated profile ID, and
      * deserializes it into a List<Gear>.
-     * @param profileId The user ID with which to search/filter
+     * @param request The GearListRequest object containing the required info (profileId, etc)
      * @return The List of Gear objects with matching profile IDs, which may be an empty list.
      */
-    public List<Gear> getGearList(final String profileId){
+    public List<Gear> getGearList(final GearListRequest request){
         Gear partitionKey = Gear.builder()
-                .profileId(profileId)
+                .profileId(request.getProfileId())
                 .build();
 
         DynamoDBQueryExpression<Gear> queryExpression = new DynamoDBQueryExpression<Gear>()
