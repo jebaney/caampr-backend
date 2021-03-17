@@ -31,7 +31,6 @@ public class DynamoGearProviderTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-        queryList.add(GearProvider.FAKE_GEAR);
 
         when(mapper.query(any(), any(DynamoDBQueryExpression.class)))
                 .thenReturn(queryList);

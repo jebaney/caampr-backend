@@ -14,7 +14,7 @@ public class GearListRequestAdaptorTest {
     @Mock
     private APIGatewayProxyRequestEvent requestEvent;
 
-    private GearListRequestAdaptor adaptor;
+    private GearListRequestAdaptor unit;
 
     @Before
     public void setUp() throws Exception {
@@ -22,12 +22,12 @@ public class GearListRequestAdaptorTest {
 
         when(requestEvent.getPath()).thenReturn("/user/666/gear");
 
-        adaptor = new GearListRequestAdaptor();
+        unit = new GearListRequestAdaptor();
     }
 
     @Test
     public void testGetGearList() throws Exception {
-        GearListRequest request = adaptor.convert(requestEvent);
+        GearListRequest request = unit.convert(requestEvent);
 
         assertEquals("6969", request.getCallerId());
         assertEquals("666", request.getProfileId());

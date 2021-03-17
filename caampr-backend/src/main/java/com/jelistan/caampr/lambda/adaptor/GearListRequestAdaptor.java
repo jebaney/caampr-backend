@@ -12,7 +12,7 @@ public class GearListRequestAdaptor{
         String[] tokens = requestEvent.getPath().split("/");
         String profileId = tokens[2];
         GearListRequest request = GearListRequest.builder()
-                .callerId("6969") //temporary hardcode until requester info is implemented
+                .callerId("6969") //TODO temporary hardcode until requester info is implemented, see backend issue #18
                 .profileId(profileId)
                 .build();
         return request;
