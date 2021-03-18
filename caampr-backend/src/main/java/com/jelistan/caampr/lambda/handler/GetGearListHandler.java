@@ -7,9 +7,9 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jelistan.caampr.lambda.adaptor.GearListRequestAdaptor;
+import com.jelistan.caampr.lambda.dao.GearDao;
 import com.jelistan.caampr.lambda.model.Gear;
 import com.jelistan.caampr.lambda.model.GearListRequest;
-import com.jelistan.caampr.lambda.provider.GearProvider;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -22,12 +22,12 @@ import java.util.List;
 @Slf4j
 public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    private final GearProvider gearProvider;
+    private final GearDao dao;
     private final GearListRequestAdaptor adaptor;
 
     @Inject
-    public GetGearListHandler(final GearProvider gearProvider, final GearListRequestAdaptor adaptor) {
-        this.gearProvider = gearProvider;
+    public GetGearListHandler(final GearDao dao, final GearListRequestAdaptor adaptor) {
+        this.dao = dao;
         this.adaptor = adaptor;
     }
 
@@ -36,7 +36,7 @@ public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequest
         final GearListRequest gearListRequest = adaptor.convert(event);
         log.info("Handling getGearList request [{}]", gearListRequest);
         final Gson gson = new GsonBuilder().create();
-        final List<Gear> list = gearProvider.getGearList(gearListRequest);
+        final List<Gear> list = dao.getList(gearListRequest);
 
         return new APIGatewayProxyResponseEvent()
                 .withStatusCode(200)
