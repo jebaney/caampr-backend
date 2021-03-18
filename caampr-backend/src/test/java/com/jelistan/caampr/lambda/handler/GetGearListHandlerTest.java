@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.jelistan.caampr.lambda.adaptor.GearListRequestAdaptor;
 import com.jelistan.caampr.lambda.model.Gear;
 import com.jelistan.caampr.lambda.model.GearListRequest;
 import com.jelistan.caampr.lambda.provider.GearProvider;
@@ -32,6 +33,9 @@ public class GetGearListHandlerTest {
     @Mock
     private GearProvider gearProvider;
 
+    @Mock
+    private GearListRequestAdaptor adaptor;
+
     private GetGearListHandler unit;
 
     @Before
@@ -43,7 +47,10 @@ public class GetGearListHandlerTest {
 
         when(requestEvent.getPath()).thenReturn("/users/6969/gear/");
 
-        unit = new GetGearListHandler(gearProvider);
+        when(adaptor.convert(any(APIGatewayProxyRequestEvent.class)))
+                .thenReturn(GearListRequest.builder().profileId("6969").build());
+
+        unit = new GetGearListHandler(gearProvider, adaptor);
     }
 
     @Test

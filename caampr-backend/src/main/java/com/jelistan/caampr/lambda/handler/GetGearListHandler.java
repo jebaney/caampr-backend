@@ -10,6 +10,7 @@ import com.jelistan.caampr.lambda.adaptor.GearListRequestAdaptor;
 import com.jelistan.caampr.lambda.model.Gear;
 import com.jelistan.caampr.lambda.model.GearListRequest;
 import com.jelistan.caampr.lambda.provider.GearProvider;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * API for handling the fetching of lists of gear
  */
+@Slf4j
 public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private final GearProvider gearProvider;
@@ -32,6 +34,7 @@ public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequest
     @Override
     public APIGatewayProxyResponseEvent handleRequest(final APIGatewayProxyRequestEvent event, Context context)  {
         final GearListRequest gearListRequest = adaptor.convert(event);
+        log.info("Handling getGearList request [{}]", gearListRequest);
         final Gson gson = new GsonBuilder().create();
         final List<Gear> list = gearProvider.getGearList(gearListRequest);
 
