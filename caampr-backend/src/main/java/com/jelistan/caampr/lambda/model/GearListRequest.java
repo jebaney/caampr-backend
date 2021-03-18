@@ -15,5 +15,6 @@ import lombok.NoArgsConstructor;
 public class GearListRequest {
     private String callerId;
     private String profileId;
-
+    private GearTypes type;
+    private VisibilityTypes visibility;
 }
