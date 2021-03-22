@@ -5,11 +5,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Builder;
 import lombok.Data;
 
-@DynamoDBTable(tableName = "Profile-v1")
+@DynamoDBTable(tableName = "Users-v1b")
 @Builder
 @Data
 public class Profile {
-    @DynamoDBHashKey(attributeName = "id")
+    @DynamoDBHashKey(attributeName = "profileId")
     private final String id;
     private final String firstName;
     private final String lastName;
