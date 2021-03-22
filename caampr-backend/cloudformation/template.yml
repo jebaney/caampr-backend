@@ -41,6 +41,7 @@ Resources:
             - !Ref DevSuffix
       ManagedPolicyArns:
         - !Ref GearDDBAccessManagedPolicy
+        - !Ref UserDDBAccessManagedPolicy
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -104,6 +105,24 @@ Resources:
         - Key: Project
           Value: cammpr
 
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: Users-v1
+      BillingMode: "PAY_PER_REQUEST"
+      AttributeDefinitions:
+        - AttributeName: "profileId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "profileId"
+          KeyType: "HASH"
+      Tags:
+        - Key: TableName
+          Value: User
+        - Key: Project
+          Value: cammpr
+
 # IAM Resources
   GearDDBAccessManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -123,3 +142,22 @@ Resources:
             Resource:
               - !GetAtt GearTable.Arn
               - !Join [ '/', [ !GetAtt GearTable.Arn, 'index/*' ] ]
+
+  UserDDBAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: UserDDBAccess
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'dynamodb:UpdateItem'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:DeleteItem'
+              - 'dynamodb:GetItem'
+            Resource:
+              - !GetAtt UserTable.Arn
+              - !Join [ '/', [ !GetAtt UserTable.Arn, 'index/*' ] ]
