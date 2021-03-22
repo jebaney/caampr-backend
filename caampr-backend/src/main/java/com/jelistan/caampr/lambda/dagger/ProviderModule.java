@@ -6,8 +6,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.jelistan.caampr.lambda.adaptor.GearListRequestAdaptor;
-import com.jelistan.caampr.lambda.provider.DynamoGearProvider;
-import com.jelistan.caampr.lambda.provider.GearProvider;
+import com.jelistan.caampr.lambda.dao.GearDao;
 import dagger.Module;
 import dagger.Provides;
 
@@ -18,8 +17,8 @@ public class ProviderModule {
 
     @Provides
     @Singleton
-    GearProvider provideGearProvider(DynamoDBMapper mapper) {
-        return new DynamoGearProvider(mapper);
+    GearDao provideGearDao(DynamoDBMapper mapper) {
+        return new GearDao(mapper);
     }
 
     @Provides

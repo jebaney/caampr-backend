@@ -7,6 +7,12 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Collections;
+
+import static com.jelistan.caampr.lambda.Constants.GET_GEAR_LIST_URI;
+import static com.jelistan.caampr.lambda.Constants.PROFILE_ID;
+import static com.jelistan.caampr.lambda.model.GearTypes.GEAR;
+import static com.jelistan.caampr.lambda.model.VisibilityTypes.PUBLIC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +26,8 @@ public class GearListRequestAdaptorTest {
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
 
-        when(requestEvent.getPath()).thenReturn("/user/666/gear");
+        when(requestEvent.getPath()).thenReturn(GET_GEAR_LIST_URI);
+        when(requestEvent.getQueryStringParameters()).thenReturn(Collections.emptyMap());
 
         unit = new GearListRequestAdaptor();
     }
@@ -30,7 +37,9 @@ public class GearListRequestAdaptorTest {
         GearListRequest request = unit.convert(requestEvent);
 
         assertEquals("6969", request.getCallerId());
-        assertEquals("666", request.getProfileId());
+        assertEquals(PROFILE_ID, request.getProfileId());
+        assertEquals(PUBLIC, request.getVisibility());
+        assertEquals(GEAR, request.getType());
     }
 
 
