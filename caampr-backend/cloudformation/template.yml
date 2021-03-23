@@ -9,15 +9,15 @@ Parameters:
 
 Resources:
 
-# Lambdas
+  # Lambdas
   GetGearListHandler:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName:
         !Join
-          - ""
-          - - Caampr-GetGearList
-            - !Ref DevSuffix
+        - ""
+        - - Caampr-GetGearList
+          - !Ref DevSuffix
       Handler: com.jelistan.caampr.lambda.dagger.InvocationHandlers::handleGetGearListRequest
       Runtime: java8
       Description: Fetches the gear list for a provided profile
@@ -36,11 +36,12 @@ Resources:
     Properties:
       RoleName:
         !Join
-          - ""
-          - - LambdaRole
-            - !Ref DevSuffix
+        - ""
+        - - LambdaRole
+          - !Ref DevSuffix
       ManagedPolicyArns:
         - !Ref GearDDBAccessManagedPolicy
+        - !Ref UserDDBAccessManagedPolicy
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -56,9 +57,9 @@ Resources:
         -
           PolicyName:
             !Join
-              - ""
-              - - allow-lambda-to-use-logs-policy
-                - !Ref DevSuffix
+            - ""
+            - - allow-lambda-to-use-logs-policy
+              - !Ref DevSuffix
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -70,22 +71,22 @@ Resources:
                   - logs:PutLogEvents
                 Resource: "*"
 
-# DynamoDB Resources
+  # DynamoDB Resources
   GearTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Gear-v2
+      TableName: Gear-v2b
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
-        - AttributeName: "id"
+        - AttributeName: "gearId"
           AttributeType: "S"
         - AttributeName: "type"
           AttributeType: "S"
         - AttributeName: "profileId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "id"
+        - AttributeName: "gearId"
           KeyType: "HASH"
         - AttributeName: "type"
           KeyType: "RANGE"
@@ -104,7 +105,70 @@ Resources:
         - Key: Project
           Value: cammpr
 
-# IAM Resources
+  ListTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: Lists-v1b
+      BillingMode: "PAY_PER_REQUEST"
+      AttributeDefinitions:
+        - AttributeName: "listId"
+          AttributeType: "S"
+        - AttributeName: "profileId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "listId"
+          KeyType: "HASH"
+      GlobalSecondaryIndexes:
+        - IndexName: "gear-by-profile"
+          KeySchema:
+            - AttributeName: "profileId"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+      Tags:
+        - Key: TableName
+          Value: Lists
+        - Key: Project
+          Value: cammpr
+
+  TagTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: Tags-v1b
+      BillingMode: "PAY_PER_REQUEST"
+      AttributeDefinitions:
+        - AttributeName: "name"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "name"
+          KeyType: "HASH"
+      Tags:
+        - Key: TableName
+          Value: Tags
+        - Key: Project
+          Value: cammpr
+
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: Users-v1b
+      BillingMode: "PAY_PER_REQUEST"
+      AttributeDefinitions:
+        - AttributeName: "profileId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "profileId"
+          KeyType: "HASH"
+      Tags:
+        - Key: TableName
+          Value: User
+        - Key: Project
+          Value: cammpr
+
+  # IAM Resources
   GearDDBAccessManagedPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -123,3 +187,60 @@ Resources:
             Resource:
               - !GetAtt GearTable.Arn
               - !Join [ '/', [ !GetAtt GearTable.Arn, 'index/*' ] ]
+
+  ListDDBAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: ListDDBAccess
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'dynamodb:UpdateItem'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:DeleteItem'
+              - 'dynamodb:GetItem'
+            Resource:
+              - !GetAtt ListTable.Arn
+              - !Join [ '/', [ !GetAtt ListTable.Arn, 'index/*' ] ]
+
+  TagDDBAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: TagDDBAccess
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'dynamodb:UpdateItem'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:DeleteItem'
+              - 'dynamodb:GetItem'
+            Resource:
+              - !GetAtt TagTable.Arn
+              - !Join [ '/', [ !GetAtt TagTable.Arn, 'index/*' ] ]
+
+  UserDDBAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: UserDDBAccess
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action:
+              - 'dynamodb:UpdateItem'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:DeleteItem'
+              - 'dynamodb:GetItem'
+            Resource:
+              - !GetAtt UserTable.Arn
+              - !Join [ '/', [ !GetAtt UserTable.Arn, 'index/*' ] ]

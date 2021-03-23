@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@DynamoDBTable(tableName = "Gear-v2")
+@DynamoDBTable(tableName = "Gear-v2b")
 @Builder
 @Data
 @NoArgsConstructor
@@ -19,7 +19,7 @@ public class Gear {
     public static final String VISIBILITY_FIELD = "visibility";
 
     @DynamoDBHashKey
-    private String id;
+    private String gearId;
 
     @DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.S)
     @DynamoDBRangeKey
