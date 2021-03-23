@@ -11,7 +11,7 @@ public class Constants {
     public static final String GET_GEAR_LIST_URI = String.format("/user/%s/gear", PROFILE_ID);
 
     public static Gear FAKE_GEAR = Gear.builder()
-            .id(GEAR_ID)
+            .gearId(GEAR_ID)
             .profileId(PROFILE_ID)
             .visibility(VisibilityTypes.PUBLIC)
             .type(GearTypes.GEAR)
