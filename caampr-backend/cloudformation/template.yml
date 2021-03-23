@@ -76,17 +76,17 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Gear-v2
+      TableName: Gear-v2b
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
-        - AttributeName: "id"
+        - AttributeName: "gearId"
           AttributeType: "S"
         - AttributeName: "type"
           AttributeType: "S"
         - AttributeName: "profileId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "id"
+        - AttributeName: "gearId"
           KeyType: "HASH"
         - AttributeName: "type"
           KeyType: "RANGE"
@@ -109,7 +109,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Lists-v1
+      TableName: Lists-v1b
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
         - AttributeName: "listId"
@@ -117,7 +117,7 @@ Resources:
         - AttributeName: "profileId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "id"
+        - AttributeName: "listId"
           KeyType: "HASH"
       GlobalSecondaryIndexes:
         - IndexName: "gear-by-profile"
@@ -136,7 +136,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Tags-v1
+      TableName: Tags-v1b
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
         - AttributeName: "name"
@@ -154,7 +154,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Users-v1
+      TableName: Users-v1b
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
         - AttributeName: "profileId"
