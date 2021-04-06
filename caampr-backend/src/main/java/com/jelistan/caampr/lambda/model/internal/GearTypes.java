@@ -1,4 +1,4 @@
-package com.jelistan.caampr.lambda.model;
+package com.jelistan.caampr.lambda.model.internal;
 
 public enum GearTypes {
     GEAR,

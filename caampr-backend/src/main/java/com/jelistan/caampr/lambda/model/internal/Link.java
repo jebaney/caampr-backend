@@ -1,4 +1,4 @@
-package com.jelistan.caampr.lambda.model;
+package com.jelistan.caampr.lambda.model.internal;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;

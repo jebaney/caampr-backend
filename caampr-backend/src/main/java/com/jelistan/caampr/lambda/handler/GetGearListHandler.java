@@ -7,14 +7,13 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jelistan.caampr.lambda.adaptor.GearListRequestAdaptor;
-import com.jelistan.caampr.lambda.dao.GearDao;
-import com.jelistan.caampr.lambda.model.Gear;
-import com.jelistan.caampr.lambda.model.GearListRequest;
+import com.jelistan.caampr.lambda.dao.DaoManager;
+import com.jelistan.caampr.lambda.model.external.GearList;
+import com.jelistan.caampr.lambda.model.internal.GearListRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * API for handling the fetching of lists of gear
@@ -22,11 +21,11 @@ import java.util.List;
 @Slf4j
 public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    private final GearDao dao;
+    private final DaoManager dao;
     private final GearListRequestAdaptor adaptor;
 
     @Inject
-    public GetGearListHandler(final GearDao dao, final GearListRequestAdaptor adaptor) {
+    public GetGearListHandler(final DaoManager dao, final GearListRequestAdaptor adaptor) {
         this.dao = dao;
         this.adaptor = adaptor;
     }
@@ -36,7 +35,7 @@ public class GetGearListHandler implements RequestHandler<APIGatewayProxyRequest
         final GearListRequest gearListRequest = adaptor.convert(event);
         log.info("Handling getGearList request [{}]", gearListRequest);
         final Gson gson = new GsonBuilder().create();
-        final List<Gear> list = dao.getList(gearListRequest);
+        final GearList list = dao.getGearList(gearListRequest);
 
         return new APIGatewayProxyResponseEvent()
                 .withStatusCode(200)

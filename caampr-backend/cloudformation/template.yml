@@ -10,17 +10,17 @@ Parameters:
 Resources:
 
   # Lambdas
-  GetGearListHandler:
+  GetUserListHandler:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName:
         !Join
         - ""
-        - - Caampr-GetGearList
+        - - Caampr-GetUserList
           - !Ref DevSuffix
-      Handler: com.jelistan.caampr.lambda.dagger.InvocationHandlers::handleGetGearListRequest
+      Handler: com.jelistan.caampr.lambda.dagger.InvocationHandlers::handleGetUserListRequest
       Runtime: java8
-      Description: Fetches the gear list for a provided profile
+      Description: Fetches the object list for a provided list id
       MemorySize: 512
       Timeout: 60
       CodeUri: ../build/distributions/caampr-backend-1.0-SNAPSHOT.zip
@@ -42,6 +42,8 @@ Resources:
       ManagedPolicyArns:
         - !Ref GearDDBAccessManagedPolicy
         - !Ref UserDDBAccessManagedPolicy
+        - !Ref TagDDBAccessManagedPolicy
+        - !Ref ListDDBAccessManagedPolicy
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -76,14 +78,14 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Gear-v2b
+      TableName: Gear-v3
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
         - AttributeName: "gearId"
           AttributeType: "S"
         - AttributeName: "type"
           AttributeType: "S"
-        - AttributeName: "profileId"
+        - AttributeName: "userId"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "gearId"
@@ -93,7 +95,7 @@ Resources:
       GlobalSecondaryIndexes:
         - IndexName: "gear-by-profile"
           KeySchema:
-            - AttributeName: "profileId"
+            - AttributeName: "userId"
               KeyType: "HASH"
             - AttributeName: "type"
               KeyType: "RANGE"
@@ -109,20 +111,20 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Lists-v1b
+      TableName: Lists-v3
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
         - AttributeName: "listId"
           AttributeType: "S"
-        - AttributeName: "profileId"
+        - AttributeName: "userId"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "listId"
           KeyType: "HASH"
       GlobalSecondaryIndexes:
-        - IndexName: "gear-by-profile"
+        - IndexName: "list-by-profile"
           KeySchema:
-            - AttributeName: "profileId"
+            - AttributeName: "userId"
               KeyType: "HASH"
           Projection:
             ProjectionType: "ALL"
@@ -136,7 +138,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Tags-v1b
+      TableName: Tags-v3
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
         - AttributeName: "name"
@@ -154,13 +156,13 @@ Resources:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
-      TableName: Users-v1b
+      TableName: Users-v3
       BillingMode: "PAY_PER_REQUEST"
       AttributeDefinitions:
-        - AttributeName: "profileId"
+        - AttributeName: "userId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "profileId"
+        - AttributeName: "userId"
           KeyType: "HASH"
       Tags:
         - Key: TableName

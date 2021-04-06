@@ -5,7 +5,10 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.jelistan.caampr.lambda.adaptor.GearAdaptor;
+import com.jelistan.caampr.lambda.adaptor.GearListAdaptor;
 import com.jelistan.caampr.lambda.adaptor.GearListRequestAdaptor;
+import com.jelistan.caampr.lambda.adaptor.UserAdaptor;
 import com.jelistan.caampr.lambda.dao.GearDao;
 import dagger.Module;
 import dagger.Provides;
@@ -43,6 +46,24 @@ public class ProviderModule {
     @Singleton
     GearListRequestAdaptor provideGearListRequestAdaptor(){
         return new GearListRequestAdaptor();
+    }
+
+    @Provides
+    @Singleton
+    GearAdaptor provideGearAdaptor(){
+        return new GearAdaptor();
+    }
+
+    @Provides
+    @Singleton
+    GearListAdaptor provideGearListAdaptor(){
+        return new GearListAdaptor();
+    }
+
+    @Provides
+    @Singleton
+    UserAdaptor provideUserAdaptor(){
+        return new UserAdaptor();
     }
 
 }

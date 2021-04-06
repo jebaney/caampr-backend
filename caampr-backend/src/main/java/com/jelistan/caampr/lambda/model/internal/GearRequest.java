@@ -1,4 +1,4 @@
-package com.jelistan.caampr.lambda.model;
+package com.jelistan.caampr.lambda.model.internal;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GearListRequest {
+public class GearRequest {
     private String callerId;
-    private String profileId;
+    private String gearId;
     private GearTypes type;
     private VisibilityTypes visibility;
 }

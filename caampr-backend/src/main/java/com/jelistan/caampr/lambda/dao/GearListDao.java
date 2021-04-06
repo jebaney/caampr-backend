@@ -7,8 +7,8 @@ import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.jelistan.caampr.lambda.model.internal.DynamoGear;
-import com.jelistan.caampr.lambda.model.internal.GearRequest;
+import com.jelistan.caampr.lambda.model.internal.DynamoGearList;
+import com.jelistan.caampr.lambda.model.internal.GearListRequest;
 import com.jelistan.caampr.lambda.model.internal.VisibilityTypes;
 
 import javax.inject.Inject;
@@ -16,35 +16,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Data Access Object for the Gear table
+ * Data Access Object for the List table
  */
-public class GearDao {
+public class GearListDao {
 
     private final DynamoDBMapper mapper;
 
     /**
-     * Constructor for Gear Provider implementation, takes Dynamo mapper as input.
+     * Constructor for List Provider implementation, takes Dynamo mapper as input.
      * @param mapper
      */
     @Inject
-    public GearDao(final DynamoDBMapper mapper){
+    public GearListDao(final DynamoDBMapper mapper){
         this.mapper = mapper;
     }
 
     /**
-     * Fetches a JSON object of a piece of gear from the Dynamo server based on the gear's associated gear ID, and
-     * deserializes it into a DynamoGear object.
-     * @param request The GearRequest object containing the required info (gearId, etc)
-     * @return The List of DynamoGear objects with matching gear IDs, which may be an empty list.
+     * Fetches a JSON list of gear list objects from the Dynamo server based on the gears' associated list ID, and
+     * deserializes it into a List<DynamoGearList>. Should only contain 1 entry if a match is found, or 0 if no match
+     * is found.
+     * @param request The GearListRequest object containing the required info (listId, etc)
+     * @return The List of DynamoGearList objects with matching list IDs, which may be an empty list.
      */
-    public List<DynamoGear> getGear(final GearRequest request){
-        DynamoGear partitionKey = DynamoGear.builder()
-                .gearId(request.getGearId())
+    public List<DynamoGearList> getList(final GearListRequest request){
+
+        DynamoGearList partitionKey = DynamoGearList.builder()
+                .listId(request.getListId())
                 .build();
 
-        DynamoDBQueryExpression<DynamoGear> queryExpression = new DynamoDBQueryExpression<DynamoGear>()
+        DynamoDBQueryExpression<DynamoGearList> queryExpression = new DynamoDBQueryExpression<DynamoGearList>()
                 .withHashKeyValues(partitionKey)
-                .withRangeKeyCondition(DynamoGear.TYPE_FIELD,
+                /*.withRangeKeyCondition(DynamoGearList.TYPE_FIELD,
                         new Condition()
                                 .withComparisonOperator(ComparisonOperator.EQ)
                                 .withAttributeValueList(
@@ -52,8 +54,7 @@ public class GearDao {
                                                 new AttributeValue().withS(request.getType().name())
                                         )
                                 )
-                )
-                //.withIndexName(DynamoGear.GEAR_BY_PROFILE_INDEX)
+                )*/
                 .withConsistentRead(false);
 
         final Map<String, Condition> filters = Maps.newHashMap();
@@ -61,7 +62,7 @@ public class GearDao {
 
         queryExpression.withQueryFilter(filters);
 
-        return mapper.query(DynamoGear.class, queryExpression);
+        return mapper.query(DynamoGearList.class, queryExpression);
     }
 
     private void addVisibilityFilter(final Map<String, Condition> filters,
@@ -70,7 +71,7 @@ public class GearDao {
         // Probably need some checking for the private case where the
         // caller is the owner
         if (visibilityType == VisibilityTypes.PUBLIC) {
-            filters.put(DynamoGear.VISIBILITY_FIELD,
+            filters.put(DynamoGearList.VISIBILITY_FIELD,
                     new Condition()
                             .withComparisonOperator(ComparisonOperator.EQ)
                             .withAttributeValueList(
