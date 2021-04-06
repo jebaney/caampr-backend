@@ -14,7 +14,7 @@ public class InvocationHandlers {
 
     private LambdaHandlers lambdaHandlers = DaggerLambdaHandlers.create();
 
-    public APIGatewayProxyResponseEvent handleGetGearListRequest(
+    public APIGatewayProxyResponseEvent handleGetUserListRequest(
             final APIGatewayProxyRequestEvent event,
             final Context context) {
         return lambdaHandlers.getGearListHandler().handleRequest(event, context);

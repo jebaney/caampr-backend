@@ -1,14 +1,14 @@
 package com.jelistan.caampr.lambda.adaptor;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.jelistan.caampr.lambda.model.Gear;
-import com.jelistan.caampr.lambda.model.GearListRequest;
-import com.jelistan.caampr.lambda.model.GearTypes;
-import com.jelistan.caampr.lambda.model.VisibilityTypes;
+import com.jelistan.caampr.lambda.model.internal.DynamoGear;
+import com.jelistan.caampr.lambda.model.internal.GearListRequest;
+import com.jelistan.caampr.lambda.model.internal.GearTypes;
+import com.jelistan.caampr.lambda.model.internal.VisibilityTypes;
 
 /**
  * Converts APIGatewayProxyRequestEvent (external) to GearListRequest (internal)
- * path: /user/[profileId]/gear
+ * path: /list/[listId]/gear
  */
 public class GearListRequestAdaptor{
 
@@ -21,11 +21,11 @@ public class GearListRequestAdaptor{
      */
     public GearListRequest convert(APIGatewayProxyRequestEvent requestEvent) {
         String[] tokens = requestEvent.getPath().split("/");
-        String profileId = tokens[2];
+        String listId = tokens[2];
         String type = tokens[3];
         GearListRequest request = GearListRequest.builder()
                 .callerId("6969") //TODO temporary hardcode until requester info is implemented, see backend issue #18
-                .profileId(profileId)
+                .listId(listId)
                 .type(GearTypes.fromString(type))
                 .visibility(extractVisibility(requestEvent))
                 .build();
@@ -36,7 +36,7 @@ public class GearListRequestAdaptor{
         if (event.getQueryStringParameters() != null) {
             return VisibilityTypes.fromString(
                     event.getQueryStringParameters()
-                            .getOrDefault(Gear.VISIBILITY_FIELD, VisibilityTypes.PUBLIC.name()));
+                            .getOrDefault(DynamoGear.VISIBILITY_FIELD, VisibilityTypes.PUBLIC.name()));
         }
         return VisibilityTypes.PUBLIC;
     }

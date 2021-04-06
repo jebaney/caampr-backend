@@ -1,7 +1,7 @@
 package com.jelistan.caampr.lambda.adaptor;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.jelistan.caampr.lambda.model.GearListRequest;
+import com.jelistan.caampr.lambda.model.internal.GearListRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,8 +11,8 @@ import java.util.Collections;
 
 import static com.jelistan.caampr.lambda.Constants.GET_GEAR_LIST_URI;
 import static com.jelistan.caampr.lambda.Constants.PROFILE_ID;
-import static com.jelistan.caampr.lambda.model.GearTypes.GEAR;
-import static com.jelistan.caampr.lambda.model.VisibilityTypes.PUBLIC;
+import static com.jelistan.caampr.lambda.model.internal.GearTypes.GEAR;
+import static com.jelistan.caampr.lambda.model.internal.VisibilityTypes.PUBLIC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -33,11 +33,11 @@ public class GearListRequestAdaptorTest {
     }
 
     @Test
-    public void testGetGearList() throws Exception {
+    public void testGetUserList() throws Exception {
         GearListRequest request = unit.convert(requestEvent);
 
         assertEquals("6969", request.getCallerId());
-        assertEquals(PROFILE_ID, request.getProfileId());
+        assertEquals(PROFILE_ID, request.getListId());
         assertEquals(PUBLIC, request.getVisibility());
         assertEquals(GEAR, request.getType());
     }
